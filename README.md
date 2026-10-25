@@ -95,8 +95,9 @@ macOS 配置与会话保存在 `~/Library/Application Support/NekoSportsWorldToo
 这些文件包含隐私数据，不要提交到 Git。
 
 当前应用内自动更新仍查询上游仓库，且只替换可执行文件，会破坏 `.app` 的签名。
-使用此 fork 的 `.app` 时，请在设置中关闭启动检查更新，后续从本仓库 Actions 下载并替换
-整个 `.app`，避免覆盖本仓库的修改。
+使用此 fork 的 `.app` 时，请在“关于”页关闭启动检查更新，后续从本仓库 Actions 下载并替换
+整个 `.app`，避免覆盖本仓库的修改。详细的 Mac 安装、首次启动、数据迁移和故障排查说明见
+[README-macOS.md](README-macOS.md)。
 
 终端运行可解压 `.tar.gz`，执行：
 
