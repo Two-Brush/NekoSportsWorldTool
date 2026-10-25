@@ -71,6 +71,41 @@ cargo build --release --no-default-features  # 仅 CLI
 
 推 tag 自动构建 Windows / macOS / Linux 四平台产物并发布 Release（见 `.github/workflows/release.yml`）。
 
+## macOS 构建与安装（本仓库）
+
+在本仓库的 **Actions → macOS → Run workflow** 选择 `main` 即可远程编译。
+修改源码并推送 `main` 也会自动构建；不需要创建 Release 或配置 Apple 签名证书。
+构建成功后，在该次运行底部的 **Artifacts** 下载对应架构的产物（保留 30 天）：
+
+| Mac 类型 | Actions 产物 |
+| --- | --- |
+| Apple Silicon（M1 / M2 / M3 / M4 等） | `NekoSportsWorldTool-macos-arm64` |
+| Intel | `NekoSportsWorldTool-macos-x64` |
+
+产物中包含 `*-app.zip`（桌面应用）、`.tar.gz`（GUI + CLI 单文件）和 SHA-256 校验文件。
+解压 Actions 下载包，再解压其中的 `*-app.zip`，将 `NekoSportsWorldTool.app` 拖到
+“应用程序”后双击启动。构建目标为 macOS 11.0 及以上；实际兼容性请在目标 Mac 上验证。
+
+应用采用临时签名（ad-hoc），未经过 Apple 公证。首次打开若被系统拦截，在尝试打开后
+前往“系统设置 → 隐私与安全性”选择“仍要打开”，只对自己确认来源的构建执行此操作。
+
+macOS 配置与会话保存在 `~/Library/Application Support/NekoSportsWorldTool/`，替换 `.app`
+不会删除这些数据。如果此前使用旧版单文件程序，可退出程序后把原目录的
+`config.json`、`identity.json`、`session.json` 等配置复制到该目录，保留原设备身份。
+这些文件包含隐私数据，不要提交到 Git。
+
+当前应用内自动更新仍查询上游仓库，且只替换可执行文件，会破坏 `.app` 的签名。
+使用此 fork 的 `.app` 时，请在设置中关闭启动检查更新，后续从本仓库 Actions 下载并替换
+整个 `.app`，避免覆盖本仓库的修改。
+
+终端运行可解压 `.tar.gz`，执行：
+
+```bash
+chmod +x ./nekosportsworldtool
+./nekosportsworldtool          # GUI
+./nekosportsworldtool help     # CLI 帮助
+```
+
 ## 许可证
 
 [CC BY-NC 4.0](LICENSE) © YanamiNeko（禁止商用）

@@ -19,6 +19,16 @@ pub fn data_dir() -> std::path::PathBuf {
     }
     #[cfg(not(target_os = "android"))]
     {
+        // Keep macOS runtime data outside the signed app bundle so replacing
+        // the app preserves sessions and does not invalidate its signature.
+        #[cfg(target_os = "macos")]
+        if let Some(home) = std::env::var_os("HOME").filter(|h| !h.is_empty()) {
+            let directory = std::path::PathBuf::from(home)
+                .join("Library/Application Support/NekoSportsWorldTool");
+            std::fs::create_dir_all(&directory)
+                .expect("Cannot create macOS app data directory");
+            return directory;
+        }
         std::env::current_exe()
             .ok()
             .and_then(|p| p.parent().map(|p| p.to_path_buf()))
